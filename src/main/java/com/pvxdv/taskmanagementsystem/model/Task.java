@@ -2,25 +2,22 @@ package com.pvxdv.taskmanagementsystem.model;
 
 import com.pvxdv.taskmanagementsystem.model.enums.Priority;
 import com.pvxdv.taskmanagementsystem.model.enums.Status;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@RequiredArgsConstructor
+@EqualsAndHashCode(exclude = {"author", "executor"})
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,16 +26,15 @@ public class Task {
     @Column(name = "header")
     String header;
     @NotBlank
+    @Lob
     @Column(name = "description")
     String description;
     @NotNull
-    @Enumerated
-    @Type(PostgreSQLEnumType.class)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
     Status status;
     @NotNull
-    @Enumerated
-    @Type(PostgreSQLEnumType.class)
+    @Enumerated(value = EnumType.STRING)
     @Column(name = "priority")
     Priority priority;
     @NotNull
