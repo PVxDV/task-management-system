@@ -2,14 +2,13 @@ package com.pvxdv.taskmanagementsystem.model;
 
 import com.pvxdv.taskmanagementsystem.model.enums.Priority;
 import com.pvxdv.taskmanagementsystem.model.enums.Status;
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
-import java.util.LinkedList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -17,35 +16,42 @@ import java.util.List;
 @Setter
 @Builder
 @RequiredArgsConstructor
-@EqualsAndHashCode(exclude = {"author", "executor"})
+@Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
     @NotBlank
     @Column(name = "header")
-    String header;
+    private String header;
     @NotBlank
     @Lob
     @Column(name = "description")
-    String description;
+    private String description;
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
-    Status status;
+    private Status status;
     @NotNull
     @Enumerated(value = EnumType.STRING)
     @Column(name = "priority")
-    Priority priority;
+    private Priority priority;
     @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
-    Author author;
-    @NotNull
+    private User author;
+    @Nullable
     @ManyToOne
     @JoinColumn(name = "executor_id")
-    Executor executor;
-    @Type(JsonBinaryType.class)
-    @Column(name = "comments", columnDefinition = "jsonb")
-    List<Comment> comments = new LinkedList<>();
+    private User executor;
+    @Nullable
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "comment_id")
+    private List<Comment> comments;
+    @NotNull
+    @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
+    LocalDate creationDate;
+    @Nullable
+    @Column(name = "update_date", columnDefinition = "TIMESTAMP")
+    LocalDate updateDate;
 }

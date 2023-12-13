@@ -1,11 +1,14 @@
 package com.pvxdv.taskmanagementsystem.controller;
 
 import com.pvxdv.taskmanagementsystem.dto.TaskDTO;
-import com.pvxdv.taskmanagementsystem.model.Task;
+import com.pvxdv.taskmanagementsystem.dto.UserDTO;
+import com.pvxdv.taskmanagementsystem.model.enums.Status;
 import com.pvxdv.taskmanagementsystem.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -16,8 +19,8 @@ public class TaskController {
     private final TaskService taskService;
     //посмотреть задачу GET
     @GetMapping(value = "/{task_id}", produces = APPLICATION_JSON_VALUE)
-    public TaskDTO findTaskById (@PathVariable Long task_id) {
-        return taskService.findById(task_id);
+    public TaskDTO getTaskById (@PathVariable Long task_id) {
+        return taskService.findTaskById(task_id);
     }
 
     //редактировать задачу PUT
@@ -39,12 +42,29 @@ public class TaskController {
         taskService.deleteTask(task_id);
     }
 
-    //создать комментарий PUT
+    //добавить исполнителя Patch
+    @PatchMapping(value = "/{task_id}/assignExecutor", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public TaskDTO assignExecutor(@PathVariable Long task_id, @RequestBody UserDTO userDTO) {
+        return taskService.assignExecutorToTask(task_id, userDTO);
+    }
 
-    //изменить статус задачи PUT
+
+    //изменить статус задачи Patch
+    @PatchMapping(value = "/{task_id}/changeStatus", consumes = APPLICATION_JSON_VALUE)
+    public TaskDTO changeStatus(@PathVariable Long task_id, @RequestBody Status status) {
+        return taskService.changeStatus(task_id, status);
+    }
 
     //найти задачи по автору GET
+    @GetMapping(value = "/byAuthor/{author_id}", produces = APPLICATION_JSON_VALUE)
+    public List<TaskDTO> getTasksByAuthor (@PathVariable Long author_id) {
+        return taskService.findTasksByAuthor(author_id);
+    }
 
     //найти задачи по исполнителю GET
+    @GetMapping(value = "/byExecutor/{executor_id}", produces = APPLICATION_JSON_VALUE)
+    public List<TaskDTO> findTaskById (@PathVariable Long executor_id) {
+        return taskService.findTasksByExecutor(executor_id);
+    }
 
 }
