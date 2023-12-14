@@ -5,6 +5,7 @@ import com.pvxdv.taskmanagementsystem.converter.CommentToCommentDTO;
 import com.pvxdv.taskmanagementsystem.dto.CommentDTO;
 import com.pvxdv.taskmanagementsystem.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,7 +16,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final TaskService taskService;
     @Override
-    public CommentDTO addComment(Long taskId, CommentDTO commentDTO) {
+    public CommentDTO addComment(Long taskId, CommentDTO commentDTO) throws EmptyResultDataAccessException {
         return null;
     }
 }
