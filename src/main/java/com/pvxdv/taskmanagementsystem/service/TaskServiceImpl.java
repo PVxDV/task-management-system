@@ -5,7 +5,7 @@ import com.pvxdv.taskmanagementsystem.converter.TaskToTaskDTO;
 import com.pvxdv.taskmanagementsystem.converter.UserDTOToUser;
 import com.pvxdv.taskmanagementsystem.dto.TaskDTO;
 import com.pvxdv.taskmanagementsystem.dto.UserDTO;
-import com.pvxdv.taskmanagementsystem.model.enums.Status;
+import com.pvxdv.taskmanagementsystem.enums.Status;
 import com.pvxdv.taskmanagementsystem.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

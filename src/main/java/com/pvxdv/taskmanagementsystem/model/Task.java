@@ -1,7 +1,7 @@
 package com.pvxdv.taskmanagementsystem.model;
 
-import com.pvxdv.taskmanagementsystem.model.enums.Priority;
-import com.pvxdv.taskmanagementsystem.model.enums.Status;
+import com.pvxdv.taskmanagementsystem.enums.Priority;
+import com.pvxdv.taskmanagementsystem.enums.Status;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

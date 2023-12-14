@@ -1,4 +1,4 @@
-package com.pvxdv.taskmanagementsystem.model.enums;
+package com.pvxdv.taskmanagementsystem.enums;
 
 public enum Status {
     NOT_STARTED,
