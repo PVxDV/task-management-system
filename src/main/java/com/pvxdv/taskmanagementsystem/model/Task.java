@@ -14,13 +14,25 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Builder
 @RequiredArgsConstructor
 @Table(name = "tasks")
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class Task extends  BaseEntity{
+    public Task(Long id, String header, String description, Status status, Priority priority, User author, User executor,
+                List<Comment> comments, LocalDate creationDate, LocalDate updateDate) {
+        super(id);
+        this.header = header;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.author = author;
+        this.executor = executor;
+        if(comments == null || comments.size()>0){
+            this.comments = comments;
+        }
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+    }
+
     @NotBlank
     @Column(name = "header")
     private String header;

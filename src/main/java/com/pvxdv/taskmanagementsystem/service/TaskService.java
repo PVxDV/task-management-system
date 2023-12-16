@@ -2,19 +2,18 @@ package com.pvxdv.taskmanagementsystem.service;
 
 
 import com.pvxdv.taskmanagementsystem.dto.TaskDTO;
-import com.pvxdv.taskmanagementsystem.dto.UserDTO;
 import com.pvxdv.taskmanagementsystem.enums.Status;
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.pvxdv.taskmanagementsystem.exception.AccessErrorException;
 
 import java.util.List;
 
 public interface TaskService {
-    TaskDTO findTaskById(Long taskId)throws EmptyResultDataAccessException;
-    TaskDTO updateTask(Long taskId, TaskDTO taskDTO)throws EmptyResultDataAccessException;
-    TaskDTO createTask(TaskDTO taskDTO) throws Exception;
+    TaskDTO findTaskById(Long taskId);
+    TaskDTO updateTask(Long taskId, TaskDTO taskDTO);
+    TaskDTO createTask(TaskDTO taskDTO);
     void deleteTask(Long id);
-    TaskDTO changeStatus(Long taskId, Status status)throws EmptyResultDataAccessException;
-    List<TaskDTO> findTasksByAuthor (Long AuthorId)throws EmptyResultDataAccessException;
-    List<TaskDTO> findTasksByExecutor (Long ExecutorId)throws EmptyResultDataAccessException;
-    TaskDTO assignExecutorToTask(Long task_id, UserDTO Executor)throws EmptyResultDataAccessException;
+    TaskDTO changeStatus(Long taskId, Status status, String account) throws AccessErrorException;
+    List<TaskDTO> findTasksByAuthor (Long authorId);
+    List<TaskDTO> findTasksByExecutor (Long executorId);
+    TaskDTO assignExecutorToTask(Long task_id, String account);
 }

@@ -1,11 +1,11 @@
 package com.pvxdv.taskmanagementsystem.controller;
 
 import com.pvxdv.taskmanagementsystem.dto.TaskDTO;
-import com.pvxdv.taskmanagementsystem.dto.UserDTO;
 import com.pvxdv.taskmanagementsystem.enums.Status;
+import com.pvxdv.taskmanagementsystem.exception.AccessErrorException;
 import com.pvxdv.taskmanagementsystem.service.TaskService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -17,17 +17,17 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping(path = "/api/v1/tasks", consumes = APPLICATION_JSON_VALUE)
 public class TaskController {
-    public final String TASK_NOT_FOUND = "Task with id=%d not found";
+    private final String TASK_NOT_FOUND = "Task with id=%d not found";
     private final TaskService taskService;
     @GetMapping(value = "/{task_id}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskDTO> getTaskById (@PathVariable Long task_id) {
         try{
             log.debug("REST request to get task by task_id");
             return new ResponseEntity<>(taskService.findTaskById(task_id), HttpStatus.OK) ;
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EntityNotFoundException e) {
         log.error(TASK_NOT_FOUND.formatted(task_id));
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -39,7 +39,7 @@ public class TaskController {
         try{
             log.debug("REST request to edit task by task_id");
             return new ResponseEntity<>(taskService.updateTask(task_id, taskDTO), HttpStatus.OK) ;
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EntityNotFoundException e) {
             log.error(TASK_NOT_FOUND.formatted(task_id));
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -65,18 +65,18 @@ public class TaskController {
         try{
             log.debug("REST request to delete task by task_id");
             taskService.deleteTask(task_id);
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EntityNotFoundException e) {
             log.error(TASK_NOT_FOUND.formatted(task_id));
         }
     }
 
     //добавить исполнителя Patch
     @PatchMapping(value = "/{task_id}/assignExecutor", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskDTO> assignExecutor(@PathVariable Long task_id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<TaskDTO> assignExecutor(@PathVariable Long task_id, @RequestBody String account) {
         try{
             log.debug("REST request to assign a task executor by task_id");
-            return new ResponseEntity<>(taskService.assignExecutorToTask(task_id, userDTO), HttpStatus.OK) ;
-        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>(taskService.assignExecutorToTask(task_id, account), HttpStatus.OK) ;
+        } catch (EntityNotFoundException e) {
             log.error(TASK_NOT_FOUND.formatted(task_id));
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -85,11 +85,12 @@ public class TaskController {
 
     //изменить статус задачи Patch
     @PatchMapping(value = "/{task_id}/changeStatus")
-    public ResponseEntity<TaskDTO> changeStatus(@PathVariable Long task_id, @RequestBody Status status) {
+    public ResponseEntity<TaskDTO> changeStatus(@PathVariable Long task_id, @RequestBody Status status,
+                                                @RequestBody String account) throws AccessErrorException {
         try{
             log.debug("REST request to change the task status by task_id");
-            return new ResponseEntity<>(taskService.changeStatus(task_id, status), HttpStatus.OK) ;
-        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>(taskService.changeStatus(task_id, status, account), HttpStatus.OK) ;
+        } catch (EntityNotFoundException e) {
             log.error(TASK_NOT_FOUND.formatted(task_id));
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
@@ -113,7 +114,7 @@ public class TaskController {
         try{
             log.debug("REST request to get task by executor_id");
             return new ResponseEntity<>(taskService.findTasksByExecutor(executor_id), HttpStatus.OK) ;
-        } catch (EmptyResultDataAccessException e) {
+        } catch (EntityNotFoundException e) {
             log.error("User with id=%d not found".formatted(executor_id));
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

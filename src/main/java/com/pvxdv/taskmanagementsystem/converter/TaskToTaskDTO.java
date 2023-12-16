@@ -7,13 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskToTaskDTO {
     public TaskDTO convert (Task task){
-        return TaskDTO.builder()
-                .id(task.getId())
-                .header(task.getHeader())
-                .status(task.getStatus())
-                .priority(task.getPriority())
-                .author(task.getAuthor())
-                .executor(task.getExecutor())
-                .build();
+        return new TaskDTO(task.getId(), task.getHeader(), task.getDescription(), task.getStatus(), task.getPriority(),
+                task.getAuthor(), task.getExecutor(), task.getComments(), task.getCreationDate(), task.getUpdateDate());
     }
 }

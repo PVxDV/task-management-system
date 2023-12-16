@@ -10,10 +10,18 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@Builder
 @RequiredArgsConstructor
 @Table(name = "comments")
 public class Comment extends BaseEntity {
+
+    @Builder
+    public Comment(Long id, User author, Task task, String comment, LocalDate creationTime) {
+        super(id);
+        this.author = author;
+        this.task = task;
+        this.comment = comment;
+        this.creationTime = creationTime;
+    }
     @NotNull
     @ManyToOne
     @JoinColumn(name = "author_id")
